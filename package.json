@@ -1,31 +1,30 @@
 {
   "name": "@focme/rollup-plugin-pick",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "a rollup plugin for picking up values from a .json file",
   "keywords": [
     "rollup plugin",
     "pick up json values"
   ],
   "type": "module",
-  "main": "./src/index.js",
   "author": "focme",
   "license": "MIT",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/foc-me/rollup-plugin-pick"
+    "url": "git+https://github.com/foc-me/rollup-plugin-pick"
   },
   "scripts": {
     "build": "rollup -c",
     "test": "mocha"
   },
-  "dependencies": {
-    "@focme/stringify-json": "^1.0.2"
-  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.1",
-    "mocha": "^10.2.0",
-    "rollup": "^3.28.1",
-    "rollup-plugin-copy": "^3.4.0"
+    "mocha": "^11.0.1",
+    "rollup": "^4.29.1",
+    "rollup-plugin-copy": "^3.5.0"
+  },
+  "dependencies": {
+    "@focme/stringify-json": "^1.0.2"
   }
 }

@@ -10,7 +10,7 @@ function makeSet(file) {
 }
 
 function makeSrc(src) {
-    return fs.statSync(src).isFile() ? makeSet(src) : undefined
+    return fs.existsSync(src) && fs.statSync(src).isFile() ? makeSet(src) : undefined
 }
 
 function makeDest(set, dest, filename) {

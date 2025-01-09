@@ -11,35 +11,24 @@ function makeFile(content, set, charset) {
     const json = stringify(content)
     const { file, path } = set
     if (!fs.existsSync(path) || !fs.statSync(path).isDirectory()) {
-        fs.mkdirSync(path)
+        fs.mkdirSync(path, { recursive: true })
     }
     fs.writeFileSync(file, json, { charset })
 }
 
 function rollupPluginPick(option) {
     option = Array.isArray(option) ? { pick: option } : option
-    const target = format(option)
+    const { src, charset, srcSet, destSet, pick, transform } = format(option)
 
     return {
         name: "pick",
         buildEnd: function() {
-            const { charset, srcSet, destSet } = target
-
-            if (!srcSet) {
-                console.warn(`${srcSet.file} not found`)
-                return
-            }
-            if (srcSet.ext !== "json") {
-                console.warn(`${srcSet.file} is not a json file`)
-                return
-            }
-
             try {
+                if (!srcSet) throw new Error(`failed to pick up ${src}: file not found`)
                 const content = makeContent(srcSet.file, charset)
-                const result = pickContent(content, target)
+                const result = pickContent(content, { pick, transform })
                 makeFile(result, destSet, charset)
             } catch (error) {
-                console.error(`failed to pick up ${srcSet.file}`)
                 throw error
             }
         }

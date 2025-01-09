@@ -1,6 +1,6 @@
 {
   "name": "@focme/rollup-plugin-pick",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a rollup plugin for picking up values from a .json file",
   "keywords": [
     "rollup plugin",

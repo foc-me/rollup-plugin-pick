@@ -50,10 +50,14 @@ type `string`
 set the input file  
 default value `./package.json` if not set
 
+relative paths are matched based on `process.cwd()`
+
 **dest**  
 type `string`  
 set the output file path  
 default value `./dist` if not set  
+
+relative paths are matched based on `process.cwd()`
 
 **filename**  
 type `string`  

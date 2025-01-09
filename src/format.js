@@ -2,35 +2,19 @@ import fs from "node:fs"
 import path from "node:path"
 
 const cwd = process.cwd()
-const spliter = cwd.includes("/") ? "/" : "\\"
-
-function relativePath(src) {
-    return /^[\.]{1,2}[\\/]/.test(src)
-}
 
 function makeSet(file) {
-    const paths = file.split(spliter)
-    const filename = paths.pop()
-    const names = filename.split(".")
-    const ext = names.pop()
-    return { file, path: paths.join(spliter), filename, name: names.join("."), ext }
+    const filename = file.split(/[\\\/]/g).pop()
+    const [name, ext] = filename.split(".")
+    return { file, path: path.resolve(file, "../"), filename, name, ext }
 }
 
 function makeSrc(src) {
-    try {
-        const stat = fs.statSync(src)
-        if (stat.isFile()) {
-            return makeSet(src)
-        }
-        throw new Error("none")
-    } catch {
-        return undefined
-    }
+    return fs.statSync(src).isFile() ? makeSet(src) : undefined
 }
 
 function makeDest(set, dest, filename) {
-    if (!set) return undefined
-    return makeSet(path.join(dest, filename || set.filename))
+    return set ? makeSet(path.join(dest, filename || set.filename)) : undefined
 }
 
 function makePick(pick) {
@@ -42,18 +26,18 @@ function makePick(pick) {
 function format(target) {
     const {
         pick = [],
-        src = path.resolve(cwd, "./package.json"),
-        dest = path.resolve(cwd, "./dist"),
+        src = "./package.json",
+        dest = "./dist",
         filename,
         ...others
     } = target || {}
 
-    if (relativePath(src) || relativePath(dest)) throw new Error("option.src or option.dest must be absolute path")
+    const srcPath = path.isAbsolute(src) ? src : path.resolve(cwd, src)
+    const destPath = path.isAbsolute(dest) ? src : path.resolve(cwd, dest)
+    const srcSet = makeSrc(srcPath)
+    const destSet = makeDest(srcSet, destPath, filename)
 
-    const srcSet = makeSrc(src)
-    const destSet = makeDest(srcSet, dest, filename)
-
-    return { src, dest, pick: makePick(pick), srcSet, destSet, ...others }
+    return { src: srcPath, dest: destPath, pick: makePick(pick), srcSet, destSet, ...others }
 }
 
 export default format

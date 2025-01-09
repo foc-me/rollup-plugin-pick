@@ -11,7 +11,7 @@ function makeFile(content, set, charset) {
     const json = stringify(content)
     const { file, path } = set
     if (!fs.existsSync(path) || !fs.statSync(path).isDirectory()) {
-        fs.mkdirSync(path)
+        fs.mkdirSync(path, { recursive: true })
     }
     fs.writeFileSync(file, json, { charset })
 }
@@ -24,7 +24,6 @@ function rollupPluginPick(option) {
         name: "pick",
         buildEnd: function() {
             const { charset, srcSet, destSet } = target
-
             if (!srcSet) {
                 console.warn(`${srcSet.file} not found`)
                 return
